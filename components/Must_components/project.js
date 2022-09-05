@@ -5,16 +5,16 @@ import { Bar } from "react-native-progress";
 import { useRoute } from "@react-navigation/native";
 
 export default function Project(props) {
-  // const [funded, setfunded] = useState(0);
-  // const [backers, setbackers] = useState(0);
-  // const [hours, sethours] = useState(0);
+  const [funded, setfunded] = useState(0);
+  const [backers, setbackers] = useState(0);
+  const [hours, sethours] = useState(0);
 
   const route = useRoute();
-  // useEffect(() => {
-  //   setfunded(props.funded);
-  //   setbackers(props.backed);
-  //   sethours(props.hours);
-  // }, [props.funded, props.backed, props.hours]);
+  useEffect(() => {
+    setfunded(props.funded);
+    setbackers(props.backed);
+    sethours(props.hours);
+  }, [props.funded, props.backed, props.hours]);
 
   return (
     <>
@@ -71,7 +71,7 @@ export default function Project(props) {
             style={{ margin: 10 }}
             color={"white"}
             unfilledColor={"black"}
-            progress={props.funded * 0.01}
+            progress={funded * 0.01}
             width={250}
             height={4}
           />
@@ -92,7 +92,7 @@ export default function Project(props) {
               color: "white",
             }}
           >
-            {props.funded}%
+            {funded}%
           </Text>
 
           <Text
@@ -102,7 +102,7 @@ export default function Project(props) {
               color: "white",
             }}
           >
-            {props.backed}
+            {backers}
           </Text>
 
           <Text
@@ -112,7 +112,7 @@ export default function Project(props) {
               color: "white",
             }}
           >
-            {props.hours}
+            {hours}
           </Text>
         </View>
 

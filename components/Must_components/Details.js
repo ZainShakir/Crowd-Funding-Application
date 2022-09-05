@@ -1,13 +1,20 @@
-import { View, Text, ScrollView, Image, Platform } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  Platform,
+  Pressable,
+} from "react-native";
 import React from "react";
 import Project from "./project";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Set } from "./POPULAR";
 
-export default function Details({ route }) {
+export default function Details({ navigation, route }) {
   const props = route.params;
   return (
-    <View>
+    <View style={{ backgroundColor: "white" }}>
       <View
         style={{
           backgroundColor: "grey",
@@ -23,6 +30,7 @@ export default function Details({ route }) {
             funded={props.funded}
             backed={props.backed}
             hours={props.hours}
+            C_ID={props.C_ID}
           />
         </View>
         <View
@@ -108,13 +116,20 @@ export default function Details({ route }) {
       <View
         style={{ backgroundColor: "black", width: "100%", height: "0.75%" }}
       ></View>
-      <View
+      <Pressable
+        android_ripple={{ color: "lightgreen" }}
         style={{
-          backgroundColor: "grey",
+          marginTop: "3%",
+          backgroundColor: "green",
           justifyContent: "center",
           alignItems: "center",
-          width: "100%",
-          height: "11%",
+          alignSelf: "center",
+          width: "80%",
+          height: "8%",
+          borderRadius: 30,
+        }}
+        onPress={() => {
+          navigation.navigate("Rewards", props.C_ID);
         }}
       >
         <Text
@@ -122,14 +137,13 @@ export default function Details({ route }) {
             fontSize: 22,
             color: "white",
             fontFamily: Platform.OS === "ios" ? "Arial" : "serif",
+            fontWeight: "bold",
           }}
         >
-          Reviews
+          BACK THIS PRODUCT
         </Text>
-      </View>
-      <View
-        style={{ backgroundColor: "black", width: "100%", height: "0.75%" }}
-      ></View>
+      </Pressable>
+      <View style={{ backgroundColor: "white", height: "2%" }}></View>
     </View>
   );
 }

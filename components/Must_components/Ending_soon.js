@@ -3,26 +3,39 @@ import {
   StyleSheet,
   View,
   FlatList,
+  Text,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import LottieView from "lottie-react-native";
+import React, { useEffect, useState, useRef } from "react";
 import Project from "./project";
 import axios from "axios";
 
 export default function ENDING_SOON({ navigation }) {
-  const [set, setData] = useState([{}]);
+  const [set, setData] = useState(null);
   const [timeout, settime] = useState(true);
+  const [isdata, setisdata] = useState(true);
+
+  const DaysLeft = (props) => {
+    let xd = Date.parse(props.data.C_END_DATETIME);
+    let z = new Date();
+    let x = Math.abs(xd - z) / (1000 * 60 * 60);
+    return Math.floor(x);
+  };
 
   const sad = async () => {
+    settime(true);
     await axios
-      .get("https://crowd-funding-api.herokuapp.com/projects/newprojectdetails")
+      .get("https://crowd-funding-api.herokuapp.com/projects/endprojectdetails")
       .then(function (response) {
         let temp = [];
         for (var i = 0; i < response.data.length; i++) {
           temp.push(response.data[i]);
         }
         setData(temp);
-        settime(false);
+        setTimeout(() => {
+          settime(false);
+        }, 2500);
       })
       .catch(function (error) {
         console.log(error);
@@ -32,6 +45,14 @@ export default function ENDING_SOON({ navigation }) {
   useEffect(() => {
     sad();
   }, []);
+
+  useEffect(() => {
+    if (set == null || set == undefined || set.length == 0) {
+      setisdata(false);
+    } else {
+      setisdata(true);
+    }
+  }, [isdata, set]);
 
   const renderItem = ({ item }) => (
     <Pressable
@@ -44,8 +65,9 @@ export default function ENDING_SOON({ navigation }) {
           disc: item.C_DESCRIPTION,
           funded: Math.ceil((item.sum / item.C_GOAL) * 100),
           backed: item.count,
-          hours: 89,
-          Name: "Mustafain Raza",
+          hours: <DaysLeft data={item} />,
+          Name: item.first_name + " " + item.last_name,
+          C_ID: item.C_ID,
         });
       }}
     >
@@ -54,8 +76,9 @@ export default function ENDING_SOON({ navigation }) {
         disc={item.C_DESCRIPTION}
         funded={Math.ceil((item.sum / item.C_GOAL) * 100)}
         backed={item.count}
-        hours={89}
+        hours={<DaysLeft data={item} />}
         data={"data:image/jpeg;base64," + item.C_IMAGE}
+        C_ID={item.C_ID}
       />
     </Pressable>
   );
@@ -64,16 +87,36 @@ export default function ENDING_SOON({ navigation }) {
       {timeout ? (
         <View
           style={{
-            flex: 1,
-            marginTop: "80%",
+            backgroundColor: "white",
+            height: "100%",
+            width: "100%",
           }}
         >
-          <ActivityIndicator size={100} color="#F23B25" />
+          <View
+            style={{
+              marginTop: "80%",
+              width: "100%",
+              height: 200,
+            }}
+          >
+            <LottieView
+              autoPlay
+              loop={timeout}
+              duration={4000}
+              source={require("../../assets/business-investor-gaining-profit-from-investment.json")}
+            />
+          </View>
+        </View>
+      ) : isdata == false ? (
+        <View style={styles.empty}>
+          <Text style={styles.textt}>No Projects here...</Text>
         </View>
       ) : (
         <FlatList
           data={set}
           renderItem={renderItem}
+          onRefresh={sad}
+          refreshing={timeout}
           // keyExtractor={(item) => item.C_ID}
         />
       )}
@@ -89,5 +132,14 @@ export const styles = StyleSheet.create({
     width: "86%",
     height: 400,
     borderRadius: 30,
+  },
+  empty: {
+    marginTop: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textt: {
+    fontSize: 30,
+    fontWeight: "bold",
   },
 });

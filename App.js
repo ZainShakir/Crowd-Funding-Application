@@ -7,25 +7,30 @@ import * as SecureStore from "expo-secure-store";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import * as SplashScreen from "expo-splash-screen";
 import IconButton from "./components/ui/IconButton";
+import "./Ignorewarning";
 //Screens
 import GetStarted from "./screens/GetStarted";
+import start from "./screens/start";
+
 import Choice from "./screens/Choice";
 import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import Home from "./screens/Home";
 import Drawer_Nav from "./components/Must_components/Drawer_Nav";
+import Details from "./components/Must_components/Details";
+import Rewards from "./components/Must_components/Rewards";
 
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
   return (
     <Stack.Navigator
-      initialRouteName="GetStarted"
+      initialRouteName="start"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="GetStarted" component={GetStarted} />
+      <Stack.Screen name="start" component={start} />
       <Stack.Screen name="ChoiceScreen" component={Choice} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
@@ -43,25 +48,35 @@ function AuthenticatedStack() {
       }}
       initialRouteName="Drawer_Nav" //"Home"
     >
-      {/* <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerRight: ({ tintColor }) => (
-            <IconButton
-              icon="exit"
-              color={"black"}
-              size={24}
-              onPress={authCtx.logout}
-            />
-          ),
-        }}
-      /> */}
       <Stack.Screen
         name="Drawer_Nav"
         component={Drawer_Nav}
         options={{ headerShown: false }}
       ></Stack.Screen>
+      <Stack.Screen
+        name="Details"
+        component={Details}
+        options={{
+          title: "Product Details",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#F23B25",
+          },
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      ></Stack.Screen>
+
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: "#F23B25",
+          },
+        }}
+        name="Rewards"
+        component={Rewards}
+      />
     </Stack.Navigator>
   );
 }
